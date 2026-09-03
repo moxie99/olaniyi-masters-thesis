@@ -1,10 +1,16 @@
-# The CPU-only PyTorch index. Without this, pip pulls the CUDA build from PyPI,
-# which is gigabytes and will not fit a free-tier build.
---extra-index-url https://download.pytorch.org/whl/cpu
-
-# Deliberately a range, not a pin: torch 2.4.x has no wheel for Python 3.13, so
-# a hard pin fails outright on a newer runtime. 2.5 through 2.x cover CPython
-# 3.9 to 3.13, and the cascade uses no API that changed across them.
+# Deliberately plain: no custom package index.
+#
+# The usual trick for a CPU-only build is "--extra-index-url
+# https://download.pytorch.org/whl/cpu", which keeps the install small. But
+# Streamlit Community Cloud resolves requirements with uv, whose index handling
+# differs from pip's, and a custom index is the most likely reason an install
+# reports success while torch is absent. The stock PyPI wheel pulls CUDA
+# libraries that go unused on a CPU host — wasteful on disk, which the platform
+# has plenty of (50 GB), but irrelevant to the ~1.5 GB of RAM that actually
+# matters here. Robustness beats tidiness.
+#
+# The range rather than a pin is also deliberate: torch 2.4.x has no wheel for
+# Python 3.13, so a hard pin fails outright on a newer runtime.
 torch>=2.5,<3
 
 numpy>=1.24,<2.3
