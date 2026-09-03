@@ -1,6 +1,13 @@
+# The CPU-only PyTorch index. Without this, pip pulls the CUDA build from PyPI,
+# which is gigabytes and will not fit a free-tier build.
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.4.1
-numpy>=1.24,<2.1
+
+# Deliberately a range, not a pin: torch 2.4.x has no wheel for Python 3.13, so
+# a hard pin fails outright on a newer runtime. 2.5 through 2.x cover CPython
+# 3.9 to 3.13, and the cascade uses no API that changed across them.
+torch>=2.5,<3
+
+numpy>=1.24,<2.3
 pandas>=2.0
 Pillow>=10.0
 streamlit>=1.30

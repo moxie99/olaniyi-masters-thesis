@@ -28,7 +28,14 @@ up to 2.7 GB of memory — comfortably more than this needs.
 
 2. **Deploy.** Go to <https://share.streamlit.io>, sign in with GitHub, click
    *New app*, choose your repository, branch `main`, main file
-   `streamlit_app.py`, and click *Deploy*.
+   `streamlit_app.py`.
+
+   Before clicking *Deploy*, open **Advanced settings** and set the Python
+   version to **3.11**. This is the one setting worth getting right: PyTorch
+   wheels lag new CPython releases, so a default of 3.13 can leave pip with no
+   installable build and the deploy fails with "Error installing requirements".
+   `requirements.txt` asks for `torch>=2.5,<3` rather than a hard pin for the
+   same reason.
 
 3. The first boot takes a few minutes: it installs PyTorch, then downloads the
    checkpoint with a progress bar. After that the app is live at
